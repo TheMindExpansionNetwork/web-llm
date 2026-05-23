@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sonic Forage Local Audio Lab</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, system-ui, -apple-system, sans-serif; background: #05070d; color: #eff7ff; }
+      body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 20% 0%, #17345d 0, transparent 34%), radial-gradient(circle at 80% 10%, #40105a 0, transparent 30%), #05070d; }
+      main { max-width: 980px; margin: 0 auto; padding: 28px 18px 64px; }
+      .hero { border: 1px solid #244a72; background: rgba(7, 13, 25, .78); border-radius: 22px; padding: 24px; box-shadow: 0 24px 80px rgba(0,0,0,.35); }
+      h1 { margin: 0 0 8px; font-size: clamp(2rem, 7vw, 4.6rem); line-height: .9; letter-spacing: -.06em; }
+      .sub { color: #b8d8ff; font-size: 1.05rem; line-height: 1.55; max-width: 760px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 18px 0; }
+      .card { background: rgba(255,255,255,.06); border: 1px solid rgba(178,218,255,.16); border-radius: 16px; padding: 14px; }
+      label { display: block; color: #b8d8ff; font-size: .85rem; margin-bottom: 6px; }
+      input, select, textarea, button { font: inherit; }
+      textarea, select { width: 100%; box-sizing: border-box; border-radius: 12px; border: 1px solid #2b5580; background: #071120; color: #eff7ff; padding: 11px; }
+      textarea { min-height: 94px; resize: vertical; }
+      button { border: 0; border-radius: 999px; background: linear-gradient(135deg, #61e2ff, #a970ff); color: #06101a; font-weight: 800; padding: 11px 15px; cursor: pointer; margin: 4px 5px 4px 0; }
+      button.secondary { background: #12233a; color: #dff4ff; border: 1px solid #2e608e; }
+      button.warn { background: #ffd166; color: #2b1800; }
+      pre { white-space: pre-wrap; word-break: break-word; background: #02060c; color: #b9f6ca; border-radius: 14px; border: 1px solid #17314c; padding: 12px; max-height: 300px; overflow: auto; }
+      .pill { display:inline-block; padding: 4px 9px; border:1px solid #325b84; border-radius:999px; color:#b8d8ff; margin: 2px 4px 2px 0; font-size:.85rem; }
+      .ok { color: #8dffb0; } .bad { color: #ff9aa9; } .muted { color: #93a8bd; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <p class="pill">WebLLM + Web Audio + local cache lab</p>
+        <h1>Sonic Forage Local Audio Lab</h1>
+        <p class="sub">Browser-local prototype: WebLLM turns prompts into JSON arrangement plans, Web Audio renders endless music/SFX locally, and the first-load model cache stays in the browser. No Modal endpoint is needed for the core loop.</p>
+        <div class="grid">
+          <div class="card"><strong>WebGPU</strong><div id="gpuStatus" class="muted">checking…</div></div>
+          <div class="card"><strong>Storage</strong><div id="storageStatus" class="muted">checking…</div></div>
+          <div class="card"><strong>Audio</strong><div id="audioStatus" class="muted">idle</div></div>
+          <div class="card"><strong>LLM</strong><div id="llmStatus" class="muted">not loaded</div></div>
+        </div>
+        <div class="grid">
+          <div class="card">
+            <label for="prompt">Prompt</label>
+            <textarea id="prompt">deep echo Sonic-Forage healing signal, glassy plucks, warm low drone, minimal sub bass, no vocals</textarea>
+            <label for="model">WebLLM model</label>
+            <select id="model">
+              <option value="Llama-3.2-1B-Instruct-q4f16_1-MLC">Llama-3.2-1B q4f16 — first iPhone target</option>
+              <option value="Llama-3.2-1B-Instruct-q4f32_1-MLC">Llama-3.2-1B q4f32 — slightly heavier</option>
+            </select>
+            <button id="renderLocal">Render local Web Audio plan</button>
+            <button id="loadLLM" class="secondary">Load WebLLM + plan</button>
+            <button id="stop" class="warn">Stop</button>
+          </div>
+          <div class="card">
+            <strong>Local SFX</strong><br />
+            <button class="secondary sfx" data-kind="chirp">alien UI chirp</button>
+            <button class="secondary sfx" data-kind="rise">portal riser</button>
+            <button class="secondary sfx" data-kind="impact">soft impact</button>
+            <button class="secondary" id="speak">Speak caption</button>
+            <p class="muted">SFX + voice fallback are local. ONNX TTS comes next after phone smoke.</p>
+          </div>
+        </div>
+        <pre id="plan">Plan will appear here.</pre>
+        <pre id="log">Ready.</pre>
+      </section>
+    </main>
+    <script type="module" src="./app.ts"></script>
+  </body>
+</html>

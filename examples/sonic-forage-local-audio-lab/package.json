@@ -1,0 +1,20 @@
+{
+  "name": "sonic-forage-local-audio-lab",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "parcel src/index.html --port 8891 --host 0.0.0.0",
+    "build": "parcel build src/index.html --dist-dir lib --public-url ./"
+  },
+  "devDependencies": {
+    "@parcel/transformer-typescript-tsc": "^2.16.1",
+    "buffer": "^5.7.1",
+    "parcel": "^2.16.1",
+    "process": "^0.11.10",
+    "typescript": "^5.9.3",
+    "url": "^0.11.4"
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.83"
+  }
+}
