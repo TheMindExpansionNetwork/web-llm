@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang=en><meta charset=utf-8><meta name=viewport content="width=device-width, initial-scale=1"><title>Sonic Forage Local Audio Lab</title><style>:root{color-scheme:dark;color:#eff7ff;background:#05070d;font-family:Inter,system-ui,-apple-system,sans-serif}body{background:radial-gradient(circle at 20% 0,#17345d 0,#0000 34%),radial-gradient(circle at 80% 10%,#40105a 0,#0000 30%),#05070d;min-height:100vh;margin:0}main{max-width:980px;margin:0 auto;padding:28px 18px 64px}.hero{background:#070d19c7;border:1px solid #244a72;border-radius:22px;padding:24px;box-shadow:0 24px 80px #00000059}h1{letter-spacing:-.06em;margin:0 0 8px;font-size:clamp(2rem,7vw,4.6rem);line-height:.9}.sub{color:#b8d8ff;max-width:760px;font-size:1.05rem;line-height:1.55}.grid{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0;display:grid}.card{background:#ffffff0f;border:1px solid #b2daff29;border-radius:16px;padding:14px}label{color:#b8d8ff;margin-bottom:6px;font-size:.85rem;display:block}input,select,textarea,button{font:inherit}textarea,select{box-sizing:border-box;color:#eff7ff;background:#071120;border:1px solid #2b5580;border-radius:12px;width:100%;padding:11px}textarea{resize:vertical;min-height:94px}button{color:#06101a;cursor:pointer;background:linear-gradient(135deg,#61e2ff,#a970ff);border:0;border-radius:999px;margin:4px 5px 4px 0;padding:11px 15px;font-weight:800}button.secondary{color:#dff4ff;background:#12233a;border:1px solid #2e608e}button.warn{color:#2b1800;background:#ffd166}pre{white-space:pre-wrap;word-break:break-word;color:#b9f6ca;background:#02060c;border:1px solid #17314c;border-radius:14px;max-height:300px;padding:12px;overflow:auto}.pill{color:#b8d8ff;border:1px solid #325b84;border-radius:999px;margin:2px 4px 2px 0;padding:4px 9px;font-size:.85rem;display:inline-block}.ok{color:#8dffb0}.bad{color:#ff9aa9}.muted{color:#93a8bd}</style><body>
+    <main>
+      <section class=hero>
+        <p class=pill>WebLLM + Web Audio + local cache lab</p>
+        <h1>Sonic Forage Local Audio Lab</h1>
+        <p class=sub>Browser-local prototype: WebLLM turns prompts into JSON arrangement plans, Web Audio renders endless music/SFX locally, and the first-load model cache stays in the browser. No Modal endpoint is needed for the core loop.</p>
+        <div class=grid>
+          <div class=card><strong>WebGPU</strong><div id=gpuStatus class=muted>checking…</div></div>
+          <div class=card><strong>Storage</strong><div id=storageStatus class=muted>checking…</div></div>
+          <div class=card><strong>Audio</strong><div id=audioStatus class=muted>idle</div></div>
+          <div class=card><strong>LLM</strong><div id=llmStatus class=muted>not loaded</div></div>
+        </div>
+        <div class=grid>
+          <div class=card>
+            <label for=prompt>Prompt</label>
+            <textarea id=prompt>deep echo Sonic-Forage healing signal, glassy plucks, warm low drone, minimal sub bass, no vocals</textarea>
+            <label for=model>WebLLM model</label>
+            <select id=model>
+              <option value=Llama-3.2-1B-Instruct-q4f16_1-MLC>Llama-3.2-1B q4f16 — first iPhone target</option>
+              <option value=Llama-3.2-1B-Instruct-q4f32_1-MLC>Llama-3.2-1B q4f32 — slightly heavier</option>
+            </select>
+            <button id=renderLocal>Render local Web Audio plan</button>
+            <button id=loadLLM class=secondary>Load WebLLM + plan</button>
+            <button id=stop class=warn>Stop</button>
+          </div>
+          <div class=card>
+            <strong>Local SFX</strong><br>
+            <button class="secondary sfx" data-kind=chirp>alien UI chirp</button>
+            <button class="secondary sfx" data-kind=rise>portal riser</button>
+            <button class="secondary sfx" data-kind=impact>soft impact</button>
+            <button class=secondary id=speak>Speak caption</button>
+            <p class=muted>SFX + voice fallback are local. ONNX TTS comes next after phone smoke.</p>
+          </div>
+        </div>
+        <pre id=plan>Plan will appear here.</pre>
+        <pre id=log>Ready.</pre>
+      </section>
+    </main>
+    <script type=module src=sonic-forage-local-audio-lab.a39067ee.js></script>
+  
+
