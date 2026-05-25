@@ -1,0 +1,450 @@
+[
+  {
+    "input": "echo / ritual / rave / layers: tape hiss, bell dust, warm drone",
+    "prediction": {
+      "action": "echo",
+      "bass": 0.649,
+      "bpm": 136,
+      "brightness": 0.518,
+      "layers": [
+        "bell dust",
+        "soft impact",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "ritual",
+      "noise": 0.335,
+      "pulse": 0.43,
+      "tension": 0.424
+    },
+    "target": {
+      "action": "echo",
+      "bass": 0.658,
+      "bpm": 142,
+      "brightness": 0.538,
+      "layers": [
+        "bell dust",
+        "soft impact",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "ritual",
+      "next_variation": "echo next bar, keep ritual identity, preserve loop-safe no-vocal texture",
+      "noise": 0.384,
+      "pulse": 0.46,
+      "tension": 0.419
+    }
+  },
+  {
+    "input": "voice command: brighten the loop, minimal rave, more soft impact, less clutter",
+    "prediction": {
+      "action": "brighten",
+      "bass": 0.213,
+      "bpm": 140,
+      "brightness": 0.78,
+      "layers": [
+        "bell dust",
+        "portal riser",
+        "shimmer pad",
+        "soft impact"
+      ],
+      "mood": "minimal",
+      "noise": 0.118,
+      "pulse": 0.283,
+      "tension": 0.157
+    },
+    "target": {
+      "action": "brighten",
+      "bass": 0.22,
+      "bpm": 138,
+      "brightness": 0.769,
+      "layers": [
+        "bell dust",
+        "didgeridoo",
+        "glassy pluck",
+        "shimmer pad",
+        "soft impact"
+      ],
+      "mood": "minimal",
+      "next_variation": "brighten next bar, keep minimal identity, preserve loop-safe no-vocal texture",
+      "noise": 0.075,
+      "pulse": 0.232,
+      "tension": 0.161
+    }
+  },
+  {
+    "input": "voice command: echo the loop, dreamy half-time, more shimmer pad, less clutter",
+    "prediction": {
+      "action": "echo",
+      "bass": 0.353,
+      "bpm": 87,
+      "brightness": 0.733,
+      "layers": [
+        "bell dust",
+        "shimmer pad",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "dreamy",
+      "noise": 0.228,
+      "pulse": 0.26,
+      "tension": 0.154
+    },
+    "target": {
+      "action": "echo",
+      "bass": 0.309,
+      "bpm": 84,
+      "brightness": 0.756,
+      "layers": [
+        "bell dust",
+        "noise wash",
+        "shimmer pad",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "dreamy",
+      "next_variation": "echo next bar, keep dreamy identity, preserve loop-safe no-vocal texture",
+      "noise": 0.223,
+      "pulse": 0.262,
+      "tension": 0.163
+    }
+  },
+  {
+    "input": "drop the urgent signal with noise wash and shimmer pad, walking, no vocals",
+    "prediction": {
+      "action": "drop",
+      "bass": 0.722,
+      "bpm": 101,
+      "brightness": 0.827,
+      "layers": [
+        "noise wash",
+        "portal riser",
+        "radio static",
+        "shimmer pad",
+        "sub bass"
+      ],
+      "mood": "urgent",
+      "noise": 0.269,
+      "pulse": 0.935,
+      "tension": 0.871
+    },
+    "target": {
+      "action": "drop",
+      "bass": 0.739,
+      "bpm": 108,
+      "brightness": 0.808,
+      "layers": [
+        "glassy pluck",
+        "noise wash",
+        "radio static",
+        "shimmer pad",
+        "sub bass"
+      ],
+      "mood": "urgent",
+      "next_variation": "drop next bar, keep urgent identity, preserve loop-safe no-vocal texture",
+      "noise": 0.268,
+      "pulse": 1.0,
+      "tension": 0.957
+    }
+  },
+  {
+    "input": "voice command: save the loop, ritual walking, more glassy pluck, less clutter",
+    "prediction": {
+      "action": "save",
+      "bass": 0.639,
+      "bpm": 103,
+      "brightness": 0.486,
+      "layers": [
+        "glassy pluck",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "ritual",
+      "noise": 0.288,
+      "pulse": 0.402,
+      "tension": 0.333
+    },
+    "target": {
+      "action": "save",
+      "bass": 0.675,
+      "bpm": 100,
+      "brightness": 0.452,
+      "layers": [
+        "glassy pluck",
+        "soft impact",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "ritual",
+      "next_variation": "save next bar, keep ritual identity, preserve loop-safe no-vocal texture",
+      "noise": 0.272,
+      "pulse": 0.398,
+      "tension": 0.361
+    }
+  },
+  {
+    "input": "Sonic Forage jam: dark noise wash, soft impact, please brighten at the next bar",
+    "prediction": {
+      "action": "brighten",
+      "bass": 0.605,
+      "bpm": 111,
+      "brightness": 0.591,
+      "layers": [
+        "noise wash",
+        "soft impact",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "dark",
+      "noise": 0.36,
+      "pulse": 0.536,
+      "tension": 0.561
+    },
+    "target": {
+      "action": "brighten",
+      "bass": 0.627,
+      "bpm": 80,
+      "brightness": 0.554,
+      "layers": [
+        "noise wash",
+        "soft impact",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "dark",
+      "next_variation": "brighten next bar, keep dark identity, preserve loop-safe no-vocal texture",
+      "noise": 0.358,
+      "pulse": 0.587,
+      "tension": 0.605
+    }
+  },
+  {
+    "input": "freeze the ritual signal with alien chirp and shimmer pad, fast, no vocals",
+    "prediction": {
+      "action": "freeze",
+      "bass": 0.501,
+      "bpm": 127,
+      "brightness": 0.369,
+      "layers": [
+        "alien chirp",
+        "shimmer pad",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "ritual",
+      "noise": 0.287,
+      "pulse": 0.14,
+      "tension": 0.256
+    },
+    "target": {
+      "action": "freeze",
+      "bass": 0.522,
+      "bpm": 130,
+      "brightness": 0.383,
+      "layers": [
+        "alien chirp",
+        "shimmer pad",
+        "sub bass",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "ritual",
+      "next_variation": "freeze next bar, keep ritual identity, preserve loop-safe no-vocal texture",
+      "noise": 0.287,
+      "pulse": 0.115,
+      "tension": 0.305
+    }
+  },
+  {
+    "input": "voice command: echo the loop, healing slow, more shimmer pad, less clutter",
+    "prediction": {
+      "action": "echo",
+      "bass": 0.406,
+      "bpm": 78,
+      "brightness": 0.691,
+      "layers": [
+        "glassy pluck",
+        "noise wash",
+        "shimmer pad",
+        "tape hiss",
+        "warm drone"
+      ],
+      "mood": "healing",
+      "noise": 0.198,
+      "pulse": 0.346,
+      "tension": 0.141
+    },
+    "target": {
+      "action": "echo",
+      "bass": 0.388,
+      "bpm": 74,
+      "brightness": 0.72,
+      "layers": [
+        "didgeridoo",
+        "glassy pluck",
+        "noise wash",
+        "shimmer pad",
+        "warm drone"
+      ],
+      "mood": "healing",
+      "next_variation": "echo next bar, keep healing identity, preserve loop-safe no-vocal texture",
+      "noise": 0.201,
+      "pulse": 0.322,
+      "tension": 0.123
+    }
+  },
+  {
+    "input": "voice command: echo the loop, playful walking, more radio static, less clutter",
+    "prediction": {
+      "action": "echo",
+      "bass": 0.313,
+      "bpm": 99,
+      "brightness": 0.846,
+      "layers": [
+        "alien chirp",
+        "bell dust",
+        "glassy pluck",
+        "radio static"
+      ],
+      "mood": "playful",
+      "noise": 0.253,
+      "pulse": 0.557,
+      "tension": 0.201
+    },
+    "target": {
+      "action": "echo",
+      "bass": 0.286,
+      "bpm": 100,
+      "brightness": 0.842,
+      "layers": [
+        "alien chirp",
+        "bell dust",
+        "glassy pluck",
+        "radio static",
+        "shimmer pad"
+      ],
+      "mood": "playful",
+      "next_variation": "echo next bar, keep playful identity, preserve loop-safe no-vocal texture",
+      "noise": 0.281,
+      "pulse": 0.616,
+      "tension": 0.237
+    }
+  },
+  {
+    "input": "echo the minimal signal with bell dust and radio static, fast, no vocals",
+    "prediction": {
+      "action": "echo",
+      "bass": 0.225,
+      "bpm": 126,
+      "brightness": 0.591,
+      "layers": [
+        "bell dust",
+        "noise wash",
+        "radio static"
+      ],
+      "mood": "minimal",
+      "noise": 0.213,
+      "pulse": 0.219,
+      "tension": 0.117
+    },
+    "target": {
+      "action": "echo",
+      "bass": 0.238,
+      "bpm": 126,
+      "brightness": 0.519,
+      "layers": [
+        "bell dust",
+        "noise wash",
+        "radio static"
+      ],
+      "mood": "minimal",
+      "next_variation": "echo next bar, keep minimal identity, preserve loop-safe no-vocal texture",
+      "noise": 0.242,
+      "pulse": 0.164,
+      "tension": 0.075
+    }
+  },
+  {
+    "input": "make it urgent; echo now; keep soft impact, add noise wash, bpm 126",
+    "prediction": {
+      "action": "echo",
+      "bass": 0.484,
+      "bpm": 126,
+      "brightness": 0.8,
+      "layers": [
+        "noise wash",
+        "portal riser",
+        "radio static",
+        "soft impact",
+        "sub bass"
+      ],
+      "mood": "urgent",
+      "noise": 0.222,
+      "pulse": 0.765,
+      "tension": 0.695
+    },
+    "target": {
+      "action": "echo",
+      "bass": 0.539,
+      "bpm": 126,
+      "brightness": 0.751,
+      "layers": [
+        "noise wash",
+        "portal riser",
+        "radio static",
+        "soft impact",
+        "sub bass"
+      ],
+      "mood": "urgent",
+      "next_variation": "echo next bar, keep urgent identity, preserve loop-safe no-vocal texture",
+      "noise": 0.237,
+      "pulse": 0.735,
+      "tension": 0.73
+    }
+  },
+  {
+    "input": "save the urgent signal with didgeridoo and soft impact, half-time, no vocals",
+    "prediction": {
+      "action": "save",
+      "bass": 0.554,
+      "bpm": 82,
+      "brightness": 0.721,
+      "layers": [
+        "didgeridoo",
+        "portal riser",
+        "radio static",
+        "soft impact",
+        "sub bass"
+      ],
+      "mood": "urgent",
+      "noise": 0.286,
+      "pulse": 0.761,
+      "tension": 0.725
+    },
+    "target": {
+      "action": "save",
+      "bass": 0.526,
+      "bpm": 88,
+      "brightness": 0.692,
+      "layers": [
+        "didgeridoo",
+        "portal riser",
+        "radio static",
+        "soft impact",
+        "sub bass"
+      ],
+      "mood": "urgent",
+      "next_variation": "save next bar, keep urgent identity, preserve loop-safe no-vocal texture",
+      "noise": 0.258,
+      "pulse": 0.719,
+      "tension": 0.707
+    }
+  }
+]

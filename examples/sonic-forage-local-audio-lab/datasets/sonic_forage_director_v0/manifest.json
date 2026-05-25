@@ -1,0 +1,56 @@
+{
+  "actions": [
+    "deepen",
+    "echo",
+    "brighten",
+    "calm",
+    "drop",
+    "freeze",
+    "mutate",
+    "save"
+  ],
+  "dataset_id": "sonic_forage_director_v0",
+  "files_sha256": {
+    "test.jsonl": "90eac81ca32bfbeb920f73e92c64bd48f5abf5bf86c12a5c8aaa0ab9372f78d3",
+    "train.jsonl": "b882acfdcbc0fc7820bbf32792d71d06ce586f8a4e6de931f2d9cb2603ec0229",
+    "validation.jsonl": "2f0b84aa40696ce1861b142cbc6ffd3c619ff0f8d02ffc3bb67cc94bea236604"
+  },
+  "layers": [
+    "warm drone",
+    "glassy pluck",
+    "tape hiss",
+    "sub bass",
+    "radio static",
+    "alien chirp",
+    "portal riser",
+    "soft impact",
+    "shimmer pad",
+    "didgeridoo",
+    "bell dust",
+    "noise wash"
+  ],
+  "moods": [
+    "healing",
+    "dark",
+    "cosmic",
+    "playful",
+    "ritual",
+    "dreamy",
+    "urgent",
+    "minimal"
+  ],
+  "purpose": "tiny realtime audio-director model: prompt/control text -> Web Audio plan controls",
+  "rows_total": 4200,
+  "schema": {
+    "input": "string",
+    "target": "bpm/brightness/pulse/bass/noise/tension/action/mood/layers/next_variation"
+  },
+  "seed": 424242,
+  "splits": {
+    "test": 378,
+    "train": 3444,
+    "validation": 378
+  },
+  "synthetic": true,
+  "training_started": false
+}

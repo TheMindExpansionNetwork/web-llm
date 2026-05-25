@@ -26,6 +26,23 @@ Click **Render local Web Audio plan**. This starts the procedural endless local 
 
 Click **Load WebLLM + plan**. The browser downloads and caches the selected WebLLM model, then asks for strict JSON and renders it locally. First target is `Llama-3.2-1B-Instruct-q4f16_1-MLC`.
 
+## Tiny realtime director model
+
+A first from-scratch synthetic controller model was trained on Modal for instant local command routing:
+
+```bash
+python3 scripts/generate_sonic_forage_director_dataset.py
+modal run scripts/train_sonic_forage_director_modal.py --epochs 90
+```
+
+Artifacts are in `artifacts/sonic_forage_director_v0/`:
+
+- `director_model.onnx` — tiny browser-target model for ONNX Runtime Web.
+- `director_feature_spec.json` — vocab, labels, and output decoding.
+- `training_receipt.json` — Modal metrics and receipt.
+
+Report: `docs/SONIC_FORAGE_DIRECTOR_V0_MODAL_TRAINING.md`.
+
 ## Why this is not full Stable Audio 3 yet
 
 Stable Audio 3 checkpoints are too large and not currently packaged as browser WebGPU artifacts. The local iPhone lane starts with WebLLM + Web Audio + small browser TTS/SFX models while SA3 remains a server/Modal or desktop lane until converted/distilled artifacts are proven.
