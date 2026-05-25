@@ -1,4 +1,5 @@
 import * as webllm from "@mlc-ai/web-llm";
+import directorSpecData from "../artifacts/sonic_forage_director_v0/director_feature_spec.json";
 
 type MusicPlan = {
   bpm: number;
@@ -7,6 +8,32 @@ type MusicPlan = {
   next_variation: string;
   brightness?: number;
   pulse?: number;
+  bass?: number;
+  noise?: number;
+  tension?: number;
+  action?: string;
+};
+
+type DirectorSpec = {
+  vocab: string[];
+  actions: string[];
+  moods: string[];
+  layers: string[];
+  thresholds: { layer_sigmoid: number };
+};
+
+type BciVibeSample = {
+  focus?: number;
+  excitement?: number;
+  relaxation?: number;
+  stress?: number;
+  engagement?: number;
+  alpha?: number;
+  beta?: number;
+  theta?: number;
+  gamma?: number;
+  quality?: number;
+  source?: string;
 };
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -20,7 +47,15 @@ let master: GainNode | null = null;
 let currentStop: (() => void) | null = null;
 let loopTimer: number | null = null;
 let engine: webllm.MLCEngineInterface | null = null;
+let directorOrt: typeof import("onnxruntime-web") | null = null;
+let directorSession: import("onnxruntime-web").InferenceSession | null = null;
+let directorSpec: DirectorSpec | null = null;
+let bciSocket: WebSocket | null = null;
+let bciSimTimer: number | null = null;
 let deck = 0;
+
+const directorModelUrl = new URL("../artifacts/sonic_forage_director_v0/director_model.onnx", import.meta.url).toString();
+const stopWords = new Set(["the", "and", "with", "now", "please", "make", "keep", "more", "less", "next", "bar", "loop", "signal", "voice", "command", "forage", "sonic"]);
 
 function log(message: string) {
   const stamp = new Date().toLocaleTimeString();
@@ -43,6 +78,69 @@ function fallbackPlan(prompt: string): MusicPlan {
 
 function showPlan(plan: MusicPlan, source: string) {
   planEl.textContent = JSON.stringify({ source, ...plan }, null, 2);
+}
+
+const sigmoid = (x: number) => 1 / (1 + Math.exp(-x));
+
+function vectorizePrompt(prompt: string, spec: DirectorSpec) {
+  const features = new Float32Array(spec.vocab.length);
+  const vocabIndex = new Map(spec.vocab.map((token, index) => [token, index]));
+  const tokens = prompt.toLowerCase().match(/[a-z0-9]+/g) || [];
+  for (const token of tokens) {
+    if (stopWords.has(token)) continue;
+    const index = vocabIndex.get(token);
+    if (index !== undefined) features[index] = Math.min(1, features[index] + 0.5);
+  }
+  return features;
+}
+
+async function ensureDirector() {
+  if (!directorOrt) directorOrt = await import("onnxruntime-web");
+  if (!directorSpec) directorSpec = directorSpecData as DirectorSpec;
+  if (!directorSession) {
+    llmStatus.textContent = "loading tiny ONNX director";
+    directorSession = await directorOrt.InferenceSession.create(directorModelUrl, {
+      executionProviders: ["wasm"],
+    });
+    llmStatus.textContent = "tiny ONNX director ready";
+  }
+  return { session: directorSession, spec: directorSpec as DirectorSpec };
+}
+
+async function runDirectorModel() {
+  await ensureAudio();
+  const prompt = ($("prompt") as HTMLTextAreaElement).value;
+  const { session, spec } = await ensureDirector();
+  const features = vectorizePrompt(prompt, spec);
+  if (!directorOrt) throw new Error("ONNX Runtime Web did not load");
+  const feeds = { features: new directorOrt.Tensor("float32", features, [1, spec.vocab.length]) };
+  const outputs = await session.run(feeds);
+  const controls = Array.from(outputs.controls.data as Float32Array).map(sigmoid);
+  const actionLogits = Array.from(outputs.action_logits.data as Float32Array);
+  const moodLogits = Array.from(outputs.mood_logits.data as Float32Array);
+  const layerScores = Array.from(outputs.layer_logits.data as Float32Array).map(sigmoid);
+  const argmax = (values: number[]) => values.reduce((best, value, index) => value > values[best] ? index : best, 0);
+  const layers = layerScores
+    .map((score, index) => ({ score, layer: spec.layers[index] }))
+    .filter(({ score }) => score > spec.thresholds.layer_sigmoid)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5)
+    .map(({ layer }) => layer);
+  const plan: MusicPlan = {
+    bpm: Math.round(64 + controls[0] * 86),
+    mood: spec.moods[argmax(moodLogits)],
+    action: spec.actions[argmax(actionLogits)],
+    layers,
+    next_variation: `${spec.actions[argmax(actionLogits)]} next bar, keep ${spec.moods[argmax(moodLogits)]} identity`,
+    brightness: Number(controls[1].toFixed(3)),
+    pulse: Number(controls[2].toFixed(3)),
+    bass: Number(controls[3].toFixed(3)),
+    noise: Number(controls[4].toFixed(3)),
+    tension: Number(controls[5].toFixed(3)),
+  };
+  showPlan(plan, "tiny ONNX realtime director");
+  schedulePlan(plan);
+  log(`Tiny director predicted ${plan.action}/${plan.mood} locally via ONNX Runtime Web.`);
 }
 
 async function checkCompat() {
@@ -71,7 +169,12 @@ async function ensureAudio() {
     master.gain.value = 0.72;
     master.connect(audioCtx.destination);
   }
-  if (audioCtx.state !== "running") await audioCtx.resume();
+  if (audioCtx.state !== "running") {
+    await Promise.race([
+      audioCtx.resume(),
+      new Promise<void>((resolve) => window.setTimeout(resolve, 700)),
+    ]);
+  }
 }
 
 function createNoiseBuffer(ctx: AudioContext, seconds: number) {
@@ -115,7 +218,7 @@ function schedulePlan(plan: MusicPlan) {
     drone.type = "sine";
     drone.frequency.setValueAtTime(baseFreq, now);
     const droneGain = ctx.createGain();
-    droneGain.gain.value = 0.24;
+    droneGain.gain.value = 0.12 + 0.24 * (plan.bass ?? 0.5);
     drone.connect(droneGain).connect(out);
     drone.start(now); drone.stop(now + duration + 0.1);
 
@@ -146,7 +249,7 @@ function schedulePlan(plan: MusicPlan) {
     filter.type = "lowpass";
     filter.frequency.value = 900 + 3600 * (plan.brightness || 0.5);
     const noiseGain = ctx.createGain();
-    noiseGain.gain.value = 0.035;
+    noiseGain.gain.value = 0.012 + 0.07 * (plan.noise ?? 0.3);
     noise.connect(filter).connect(noiseGain).connect(out);
     noise.start(now); noise.stop(now + duration + 0.1);
 
@@ -231,17 +334,126 @@ function sfx(kind: string) {
   log(`Played local SFX: ${kind}`);
 }
 
-$("renderLocal").addEventListener("click", renderFallback);
-$("loadLLM").addEventListener("click", loadWebLLMAndPlan);
-$("stop").addEventListener("click", stopLoop);
-document.querySelectorAll<HTMLButtonElement>(".sfx").forEach((button) => {
-  button.addEventListener("click", async () => { await ensureAudio(); sfx(button.dataset.kind || "chirp"); });
-});
-$("speak").addEventListener("click", () => {
-  const text = "Sonic Forage local browser lab is running. Web Audio is rendering the loop locally.";
-  speechSynthesis.cancel();
-  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-  log("Spoke local SpeechSynthesis fallback caption.");
-});
+function clamp01(value: number | undefined, fallback = 0.5) {
+  if (typeof value !== "number" || Number.isNaN(value)) return fallback;
+  return Math.max(0, Math.min(1, value));
+}
 
-checkCompat();
+function bciSampleToPlan(sample: BciVibeSample): MusicPlan {
+  const focus = clamp01(sample.focus ?? sample.engagement, 0.5);
+  const excitement = clamp01(sample.excitement ?? sample.beta, 0.45);
+  const relaxation = clamp01(sample.relaxation ?? sample.alpha, 0.5);
+  const stress = clamp01(sample.stress ?? sample.gamma, 0.25);
+  const theta = clamp01(sample.theta, 0.35);
+  const bpm = Math.round(72 + excitement * 58 - relaxation * 18 + stress * 20);
+  const mood = stress > 0.66
+    ? "urgent wolf edge"
+    : relaxation > 0.64
+      ? "calm wolf drift"
+      : focus > 0.62
+        ? "locked-in wolf hunt"
+        : "curious wolf scan";
+  const layers = [
+    relaxation > 0.55 ? "warm drone" : "sub bass",
+    focus > 0.6 ? "glassy pluck" : "soft echo pulse",
+    excitement > 0.58 ? "portal riser" : "tape hiss",
+    stress > 0.55 ? "radio static" : "shimmer pad",
+  ];
+  return {
+    bpm,
+    mood,
+    action: stress > 0.65 ? "calm" : excitement > 0.65 ? "drop" : focus > 0.6 ? "deepen" : "wander",
+    layers,
+    next_variation: `BCI vibe source=${sample.source || "unknown"}; focus=${focus.toFixed(2)} excitement=${excitement.toFixed(2)} relaxation=${relaxation.toFixed(2)} stress=${stress.toFixed(2)}`,
+    brightness: Number((0.25 + focus * 0.45 + excitement * 0.25).toFixed(3)),
+    pulse: Number((0.1 + excitement * 0.75 + stress * 0.15).toFixed(3)),
+    bass: Number((0.25 + relaxation * 0.45 + theta * 0.2).toFixed(3)),
+    noise: Number((0.05 + stress * 0.65).toFixed(3)),
+    tension: Number((stress * 0.75 + excitement * 0.25).toFixed(3)),
+  };
+}
+
+async function applyBciSample(sample: BciVibeSample) {
+  await ensureAudio();
+  const plan = bciSampleToPlan(sample);
+  showPlan(plan, "EPOC X / BCI vibe bridge");
+  schedulePlan(plan);
+  $("bciStatus").textContent = `${sample.source || "bridge"}: ${plan.mood}`;
+  log(`BCI vibe mapped to ${plan.action}/${plan.mood}.`);
+}
+
+function connectBciBridge() {
+  if (bciSimTimer) window.clearInterval(bciSimTimer);
+  bciSimTimer = null;
+  if (bciSocket) bciSocket.close();
+  const url = ($("bciBridgeUrl") as HTMLInputElement).value.trim() || "ws://127.0.0.1:8765";
+  $("bciStatus").textContent = `connecting ${url}`;
+  bciSocket = new WebSocket(url);
+  bciSocket.addEventListener("open", () => {
+    $("bciStatus").textContent = `connected ${url}`;
+    log(`Connected BCI bridge at ${url}.`);
+  });
+  bciSocket.addEventListener("message", (event) => {
+    try {
+      void applyBciSample(JSON.parse(String(event.data)) as BciVibeSample);
+    } catch (err) {
+      log(`BCI bridge message ignored: ${String(err)}`);
+    }
+  });
+  bciSocket.addEventListener("close", () => { $("bciStatus").textContent = "bridge closed"; });
+  bciSocket.addEventListener("error", () => { $("bciStatus").textContent = "bridge error"; });
+}
+
+function simulateBciVibe() {
+  if (bciSocket) bciSocket.close();
+  if (bciSimTimer) window.clearInterval(bciSimTimer);
+  let t = 0;
+  const tick = () => {
+    t += 0.18;
+    void applyBciSample({
+      source: "simulated EPOC X vibe",
+      focus: 0.5 + 0.35 * Math.sin(t * 0.7),
+      excitement: 0.48 + 0.32 * Math.sin(t * 1.1 + 0.6),
+      relaxation: 0.5 + 0.3 * Math.sin(t * 0.45 + 2.2),
+      stress: 0.2 + 0.18 * Math.max(0, Math.sin(t * 0.9 + 1.4)),
+      theta: 0.42 + 0.18 * Math.sin(t * 0.38),
+      quality: 1,
+    });
+  };
+  tick();
+  bciSimTimer = window.setInterval(tick, 9000);
+  $("bciStatus").textContent = "simulating BCI vibe";
+}
+
+function boot() {
+  try {
+    $("renderLocal").addEventListener("click", renderFallback);
+    $("runDirector").addEventListener("click", runDirectorModel);
+    $("loadLLM").addEventListener("click", loadWebLLMAndPlan);
+    $("stop").addEventListener("click", stopLoop);
+    $("connectBci").addEventListener("click", connectBciBridge);
+    $("simulateBci").addEventListener("click", simulateBciVibe);
+    document.querySelectorAll<HTMLButtonElement>(".sfx").forEach((button) => {
+      button.addEventListener("click", async () => { await ensureAudio(); sfx(button.dataset.kind || "chirp"); });
+    });
+    $("speak").addEventListener("click", () => {
+      const text = "Sonic Forage local browser lab is running. Web Audio is rendering the loop locally.";
+      speechSynthesis.cancel();
+      speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+      log("Spoke local SpeechSynthesis fallback caption.");
+    });
+    Object.assign(window, { __sonicForageSmoke: { renderFallback, runDirectorModel, simulateBciVibe, stopLoop } });
+    $("bootStatus").textContent = "handlers attached";
+    log("Sonic Forage app booted; handlers attached.");
+    void checkCompat();
+  } catch (err) {
+    $("bootStatus").textContent = `boot failed: ${String(err)}`;
+    console.error(err);
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot, { once: true });
+} else {
+  boot();
+}

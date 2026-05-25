@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "parcel src/index.html --port 8891 --host 0.0.0.0",
-    "build": "parcel build src/index.html --dist-dir lib --public-url ./"
+    "build": "parcel build src/index.html --dist-dir lib --public-url ./ && cp node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded* lib/"
   },
   "devDependencies": {
     "@parcel/transformer-typescript-tsc": "^2.16.1",
@@ -15,6 +15,7 @@
     "url": "^0.11.4"
   },
   "dependencies": {
-    "@mlc-ai/web-llm": "^0.2.83"
+    "@mlc-ai/web-llm": "^0.2.83",
+    "onnxruntime-web": "^1.26.0"
   }
 }

@@ -32,10 +32,12 @@
         <h1>Sonic Forage Local Audio Lab</h1>
         <p class="sub">Browser-local prototype: WebLLM turns prompts into JSON arrangement plans, Web Audio renders endless music/SFX locally, and the first-load model cache stays in the browser. No Modal endpoint is needed for the core loop.</p>
         <div class="grid">
+          <div class="card"><strong>Boot</strong><div id="bootStatus" class="muted">booting…</div></div>
           <div class="card"><strong>WebGPU</strong><div id="gpuStatus" class="muted">checking…</div></div>
           <div class="card"><strong>Storage</strong><div id="storageStatus" class="muted">checking…</div></div>
           <div class="card"><strong>Audio</strong><div id="audioStatus" class="muted">idle</div></div>
           <div class="card"><strong>LLM</strong><div id="llmStatus" class="muted">not loaded</div></div>
+          <div class="card"><strong>BCI</strong><div id="bciStatus" class="muted">not connected</div></div>
         </div>
         <div class="grid">
           <div class="card">
@@ -47,6 +49,7 @@
               <option value="Llama-3.2-1B-Instruct-q4f32_1-MLC">Llama-3.2-1B q4f32 — slightly heavier</option>
             </select>
             <button id="renderLocal">Render local Web Audio plan</button>
+            <button id="runDirector" class="secondary">Run tiny director model</button>
             <button id="loadLLM" class="secondary">Load WebLLM + plan</button>
             <button id="stop" class="warn">Stop</button>
           </div>
@@ -57,6 +60,14 @@
             <button class="secondary sfx" data-kind="impact">soft impact</button>
             <button class="secondary" id="speak">Speak caption</button>
             <p class="muted">SFX + voice fallback are local. ONNX TTS comes next after phone smoke.</p>
+          </div>
+          <div class="card">
+            <strong>EPOC X / BCI vibe bridge</strong>
+            <p class="muted">Connect a local Cortex bridge or run the built-in simulator. Maps focus/excitement/relaxation/stress into Web Audio controls; research/play only, not medical.</p>
+            <label for="bciBridgeUrl">Bridge WebSocket</label>
+            <input id="bciBridgeUrl" value="ws://127.0.0.1:8765" />
+            <button class="secondary" id="connectBci">Connect BCI bridge</button>
+            <button class="secondary" id="simulateBci">Simulate BCI vibe</button>
           </div>
         </div>
         <pre id="plan">Plan will appear here.</pre>
